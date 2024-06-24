@@ -13,6 +13,7 @@ def fetch_stock_data(ticker):
     start_date = "2020-01-01"
     stock_data = yf.download(ticker, start=start_date)
     end_date = stock_data.index[-1].strftime('%Y-%m-%d')
+    yf.pdr_override()
     return stock_data, start_date, end_date
 
 def preprocess_data(stock_data):
