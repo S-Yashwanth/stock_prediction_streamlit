@@ -79,7 +79,10 @@ def forecast_future(model, scaler, last_30_days, periods=30):
     forecast = np.array(forecast).reshape(-1, 1)
     forecast = scaler.inverse_transform(forecast)
     return forecast
-
+def calculate_accuracy(actual, predicted):
+    mae = np.mean(np.abs(actual - predicted))
+    mse = np.mean((actual - predicted)**2)
+    return mae, mse
 # Plot
 def plot_forecast(train_data, test_data, predictions, future_forecast):
     fig, ax = plt.subplots(figsize=(14, 7))
@@ -116,6 +119,10 @@ def main():
             # Future forecast
             last_30_days = processed_data['Close'].values[-30:]
             future_forecast = forecast_future(lstm_model, scaler, last_30_days)
+
+        mae, mse = calculate_accuracy(test_data['Close'].values, lstm_predictions.flatten())
+        st.write(f"Mean Absolute Error: {mae:.2f}")
+        st.write(f"Mean Squared Error: {mse:.2f}")    
         
         # Plot results
         st.subheader('Stock Price Prediction and Forecast')
